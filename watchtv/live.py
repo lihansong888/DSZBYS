@@ -5,13 +5,12 @@ import os
 
 # ========== 填写源的地址 ==========
 URL_LIST = [
-    "https://sub.ottiptv.cc/huyayqk.m3u"
+    "http://rihou.cc:567/gggg.nzk"
 ]
 
 # ========== 分组映射：左边是源里的分组名，右边是输出时改后的分组名 ==========
 GROUP_MAP = {
-    "原创": "hansong虎牙原创",
-    "一起看": "hansong虎牙一起看",
+    "央卫咪咕": "咪咕-央卫",
 }
 
 def parse_any(text: str):
