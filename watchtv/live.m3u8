@@ -75,8 +75,8 @@ http://rihou.cc:555/tv/[mg]陕西卫视
 http://rihou.cc:555/tv/[mg]兵团卫视
 #EXTINF:-1 group-title="hansong咪咕-央卫",黑龙江视咪咕
 http://rihou.cc:555/tv/[mg]黑龙江视
-#EXTINF:-1 group-title="hansong国内景区直播",直播中国
-https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001
+#EXTINF:-1 group-title="hansong国内景区直播",直播中国精编直播
+https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8
 #EXTINF:-1 group-title="hansong-音乐直播",怀集音乐台
 http://live.xmcdn.com:80/live/966/64.m3u8
 #EXTINF:-1 group-title="hansong-音乐直播",音乐石榴
