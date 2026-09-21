@@ -75,10 +75,48 @@ http://rihou.cc:555/tv/[mg]陕西卫视
 http://rihou.cc:555/tv/[mg]兵团卫视
 #EXTINF:-1 group-title="hansong咪咕-央卫",黑龙江视咪咕
 http://rihou.cc:555/tv/[mg]黑龙江视
+#EXTINF:-1 group-title="hansong-音乐直播",MTVLIVE
+http://23.237.104.106:8080/USA_MTV_LIVE/index.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",AMC音乐
+https://AMChls.wns.live/hls/stream.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",Persiana Music
+https://musichls.persiana.live/hls/stream.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",PersianaRap
+https://raphls.persiana.live/hls/stream.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",PersianaSon
+https://sonhls.persiana.live/hls/stream.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",Karibtv
+https://streamtv.onliv3.online:1936/karibtv/karibtv/playlist.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",QwestTV
+https://amg00447-qwesttv-qwestjazz-cineverse-ve12d.amagi.tv/playlist/amg00447-qwesttv-qwestjazz-cineverse/playlist.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",M2oTV
+https://4c4b867c89244861ac216426883d1ad0.msvdn.net/live/S62628868/uhdWBlkC1AoO/playlist.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",OneTV
+https://hms.pfs.gdn/v1/broadcast/one/playlist.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",4MUSIC
+https://musichls.persiana.live/hls/stream.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",PMC
+https://pmchls.wns.live/hls/stream.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",PMC Rohls
+https://pmcrohls.wns.live/hls/stream.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",Qmusic
+https://stream.qmusic.nl/qmusic/videohls.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",Hit TV
+https://peer2.tdiradio.com/static/streaming-playlists/hls/bab99862-ec1c-474f-9a02-4f8c8677d565/0.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",Lola
+https://peer2.tdiradio.com/static/streaming-playlists/hls/7c3ea8d3-49dc-4e1b-8b1e-dc6fab71f5cf/0.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",T2
+https://t2hls.wns.live/hls/stream.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",TDI
+https://t2hls.wns.live/hls/stream.m3u8
+#EXTINF:-1 group-title="hansong-音乐直播",点歌台
+http://cfss.cc/cdn/du/85894.flv
 #EXTINF:-1 group-title="hansong-音乐直播",怀集音乐台
 http://live.xmcdn.com:80/live/966/64.m3u8
 #EXTINF:-1 group-title="hansong-音乐直播",音乐石榴
 https://live.ottiptv.cc/huya/17091681
+#EXTINF:-1 group-title="hansong-音乐直播",大立电视台
+http://www.dalitv.com.tw:4568/live/dali/index.m3u8
 #EXTINF:-1 group-title="hansong-音乐直播",秋月剪水
 http://live.nctv.top/douyu1.php?id=9588891
 #EXTINF:-1 group-title="hansong-音乐直播",喵喵音乐台
@@ -105,64 +143,6 @@ http://live.nctv.top/douyu1.php?id=10469362
 http://live.nctv.top/douyu1.php?id=8706465
 #EXTINF:-1 group-title="hansong-音乐直播",蚕豆电台
 http://live.nctv.top/douyu1.php?id=8768792
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV1
-http://go.bkpcp.top/mg/cctv1
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV2
-http://go.bkpcp.top/mg/cctv2
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV3
-http://go.bkpcp.top/mg/cctv3
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV4
-http://go.bkpcp.top/mg/cctv4
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV4欧洲
-http://go.bkpcp.top/mg/cctv4o
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV4美洲
-http://go.bkpcp.top/mg/cctv4m
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV5
-http://go.bkpcp.top/mg/cctv5
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV5+
-http://go.bkpcp.top/mg/cctv5p
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV6
-http://go.bkpcp.top/mg/cctv6
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV7
-http://go.bkpcp.top/mg/cctv7
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV8
-http://go.bkpcp.top/mg/cctv8
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV9
-http://go.bkpcp.top/mg/cctv9
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV10
-http://go.bkpcp.top/mg/cctv10
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV11
-http://go.bkpcp.top/mg/cctv11
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV12
-http://go.bkpcp.top/mg/cctv12
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV13
-http://go.bkpcp.top/mg/cctv13
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV14
-http://go.bkpcp.top/mg/cctv14
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV15
-http://go.bkpcp.top/mg/cctv15
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV16
-http://go.bkpcp.top/mg/cctv16
-#EXTINF:-1 group-title="hansong-央卫直播",CCTV17
-http://go.bkpcp.top/mg/cctv17
-#EXTINF:-1 group-title="hansong-央卫直播",CETV1
-http://e1.woc.iiiya.cn:18888/rtp/239.61.2.167:8990
-#EXTINF:-1 group-title="hansong-央卫直播",CETV2
-http://e1.woc.iiiya.cn:18888/rtp/239.61.3.6:9554
-#EXTINF:-1 group-title="hansong-央卫直播",CETV4
-http://e1.woc.iiiya.cn:18888/rtp/239.61.3.15:9608
-#EXTINF:-1 group-title="hansong-央卫直播",中学生
-http://e1.woc.iiiya.cn:18888/rtp/239.61.3.73:9956
-#EXTINF:-1 group-title="hansong-央卫直播",CGTN纪录片
-https://english-livebkali.cgtn.com/live/doccgtn_0.m3u8
-#EXTINF:-1 group-title="hansong-央卫直播",CGTN
-https://english-livebkali.cgtn.com/live/encgtn_0.m3u8
-#EXTINF:-1 group-title="hansong-央卫直播",CGTN阿语
-http://go.bkpcp.top/mg/cgtna
-#EXTINF:-1 group-title="hansong-央卫直播",CGTN英语
-http://go.bkpcp.top/mg/cgtne
-#EXTINF:-1 group-title="hansong-央卫直播",CGTN西语
-https://0472.org/hls/cgtnx.m3u8
 #EXTINF:-1 group-title="hansong-央卫直播",电视指南
 http://113.26.251.182:8009/hls/67/index.m3u8
 #EXTINF:-1 group-title="hansong-央卫直播",CCTV1
@@ -225,6 +205,8 @@ https://0472.org/hls/cgtne.m3u8
 https://0472.org/hls/cgtnf.m3u8
 #EXTINF:-1 group-title="hansong-央卫直播",CGTN记录
 https://0472.org/hls/cgtnd.m3u8
+#EXTINF:-1 group-title="hansong-央卫直播",CGTN西语
+https://0472.org/hls/cgtnx.m3u8
 #EXTINF:-1 group-title="hansong-央卫直播",CGTN阿语
 https://0472.org/hls/cgtna.m3u8
 #EXTINF:-1 group-title="hansong-央卫直播",CCTV4K
@@ -243,6 +225,24 @@ http://60.30.67.44:8834/rtp/225.1.2.207:5002
 http://demo1.ruisilink.top:9000/rtp/239.76.253.95:9000
 #EXTINF:-1 group-title="hansong-央卫直播",中文国际美洲
 http://demo1.ruisilink.top:9000/rtp/239.76.253.96:9000
+#EXTINF:-1 group-title="hansong-央卫直播",CETV1
+http://e1.woc.iiiya.cn:18888/rtp/239.61.2.167:8990
+#EXTINF:-1 group-title="hansong-央卫直播",CETV2
+http://e1.woc.iiiya.cn:18888/rtp/239.61.3.6:9554
+#EXTINF:-1 group-title="hansong-央卫直播",CETV3
+http://192.151.150.154/live/cetv3.m3u8
+#EXTINF:-1 group-title="hansong-央卫直播",CETV4
+http://e1.woc.iiiya.cn:18888/rtp/239.61.3.15:9608
+#EXTINF:-1 group-title="hansong-央卫直播",中学生
+http://e1.woc.iiiya.cn:18888/rtp/239.61.3.73:9956
+#EXTINF:-1 group-title="hansong-央卫直播",CGTN纪录片
+https://english-livebkali.cgtn.com/live/doccgtn_0.m3u8
+#EXTINF:-1 group-title="hansong-央卫直播",CGTN
+https://english-livebkali.cgtn.com/live/encgtn_0.m3u8
+#EXTINF:-1 group-title="hansong-央卫直播",CGTN阿语
+http://go.bkpcp.top/mg/cgtna
+#EXTINF:-1 group-title="hansong-央卫直播",CGTN英语
+http://go.bkpcp.top/mg/cgtne
 #EXTINF:-1 group-title="hansong-央卫直播",第一剧场
 http://63.141.230.178:82/gslb/zbdq5.m3u8?id=dyjc
 #EXTINF:-1 group-title="hansong-央卫直播",电视指南
