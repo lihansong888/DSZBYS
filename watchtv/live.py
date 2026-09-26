@@ -1,7 +1,6 @@
 import requests
 import re
 import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
 # ========== 填写源的地址 ==========
 URL_LIST = [
     "http://rihou.cc:567/gggg.nzk",
@@ -15,31 +14,11 @@ GROUP_MAP = {
     "音乐": "hansong-音乐直播",
     "央卫": "hansong-央卫直播",
 }
-# ===================== 粗筛配置（Github Action环境，放宽参数）=====================
-MAX_WORKERS = 2    # 并发数，不要大于3，防止Action超时/被源站封禁
-CHECK_TIMEOUT = 5  # 链接检测超时时间（秒），放宽到5秒
-RETRY_TIMES = 2    # 失败重试次数，放宽到2次
-# ========================================================================
-
-def check_url_alive(url):
-    """粗筛：仅判断链接是否能建立连接，不完整拉流，减轻压力"""
-    for _ in range(RETRY_TIMES):
-        try:
-            # HEAD请求，不下载流内容，速度快、流量小
-            resp = requests.head(url, timeout=CHECK_TIMEOUT, allow_redirects=True)
-            if resp.status_code < 400:
-                return True
-        except Exception:
-            pass
-        # HEAD失败，降级用GET只拉取少量数据
-        try:
-            resp = requests.get(url, timeout=CHECK_TIMEOUT, allow_redirects=True, stream=True)
-            resp.raw.read(512) # 只读取前512字节，不完整下载
-            if resp.status_code < 400:
-                return True
-        except Exception:
-            continue
-    return False
+# ========== 说明：原存活检测已停用 ==========
+# GitHub Actions 服务器在美国，访问国内直播源超时/抖动严重，
+# HEAD/GET 粗筛会把大量国内可用源误杀（且并发2+重试2次又慢又耗Action额度）。
+# 存活筛选全部交给宝塔端（国内、100并发、5~6秒阈值、一天2次），
+# 本仓库只负责：拉取上游源 -> 分组映射 -> 合并去重 -> 输出全量 live.m3u8。
 
 def parse_any(text: str):
     res = []
@@ -104,45 +83,17 @@ def main():
                     group_bucket[output_group].append((ch_name, play_url))
         except Exception as e:
             print(f"⚠️ 拉取 {url} 失败：{e}")
-    total_raw_cnt = sum(len(v) for v in group_bucket.values())
-    print(f"✅采集完成，原始频道总数：{total_raw_cnt} 个")
+
+    # ========== 存活检测已停用：全部源直接输出，筛选交给宝塔端 ==========
+    total_cnt = sum(len(v) for v in group_bucket.values())
+    print(f"✅采集完成，共提取 {total_cnt} 个频道（跳过粗筛检测，全量输出）")
     for gname, ch_list in group_bucket.items():
         print(f"  - {gname}: {len(ch_list)} 个频道")
-
-    # ===================== 新增：Github云端粗筛 =====================
-    all_channels_flat = []
-    for gname, ch_list in group_bucket.items():
-        for cname, curl in ch_list:
-            all_channels_flat.append((gname, cname, curl))
-
-    valid_channels = []
-    print(f"\n🔍 开始粗筛检测，并发数：{MAX_WORKERS}")
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        future_map = {executor.submit(check_url_alive, curl): (gname, cname, curl) for gname, cname, curl in all_channels_flat}
-        for future in as_completed(future_map):
-            gname, cname, curl = future_map[future]
-            try:
-                is_alive = future.result()
-                if is_alive:
-                    valid_channels.append((gname, cname, curl))
-                    print(f"✅ {cname}")
-                else:
-                    print(f"❌ {cname} 粗筛判定失效，剔除")
-            except Exception as e:
-                print(f"⚠️ {cname} 检测异常，保留给宝塔复核")
-                valid_channels.append((gname, cname, curl))
-
-    print(f"\n✅粗筛完成，原始{total_raw_cnt}条，粗筛保留{len(valid_channels)}条")
-    # 重新回填到分组结构
-    final_group = {v: [] for v in GROUP_MAP.values()}
-    for gname, cname, curl in valid_channels:
-        final_group[gname].append((cname, curl))
-    # ======================================================================
 
     # 输出m3u8文件
     out_dir = os.path.dirname(os.path.abspath(__file__))
     output_m3u = ["#EXTM3U"]
-    for gname, ch_list in final_group.items():
+    for gname, ch_list in group_bucket.items():
         for cname, curl in ch_list:
             # 输出时用改后的分组名
             fake_ext = f'#EXTINF:-1 group-title="{gname}",{cname}'
@@ -151,7 +102,7 @@ def main():
     m3u8_path = os.path.join(out_dir, "live.m3u8")
     with open(m3u8_path, "w", encoding="utf-8") as f:
         f.write("\n".join(output_m3u))
-    print(f"✅已输出粗筛后的 m3u8：{m3u8_path}")
+    print(f"✅已输出 m3u8：{m3u8_path}")
 
 if __name__ == "__main__":
     main()
