@@ -6,6 +6,8 @@ URL_LIST = [
     "http://rihou.cc:567/gggg.nzk",
     "https://raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv4.txt",
     "https://raw.githubusercontent.com/bj123sd/hycg/refs/heads/main/tv.txt",
+    "https://raw.githubusercontent.com/niuber/iptv-api/refs/heads/master/output/ipv6/result.txt",
+   #2026.10新增 output/ipv6
     
 ]
 # ========== 分组映射：左边是源里的分组名，右边是输出时改后的分组名 ==========
@@ -13,6 +15,10 @@ GROUP_MAP = {
     "央卫咪咕": "hansong咪咕-央卫",
     "音乐": "hansong-音乐直播",
     "央卫": "hansong-央卫直播",
+    "📺央视频道": "hansong-央卫直播",
+    "📡卫视频道": "hansong-央卫直播",
+    
+    
 }
 # ========== 说明：原存活检测已停用 ==========
 # GitHub Actions 服务器在美国，访问国内直播源超时/抖动严重，
