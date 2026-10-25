@@ -3,15 +3,15 @@ import re
 import os
 # ========== 填写源的地址 ==========
 URL_LIST = [
-    #"http://rihou.cc:567/gggg.nzk",
-    "https://lihansong.top/iptv/src/yf.txt",
+   "http://rihou.cc:567/gggg.nzk",
+    #"https://lihansong.top/iptv/src/yf.txt",
     
-    #"https://raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv4.txt",
-    #"https://raw.githubusercontent.com/bj123sd/hycg/refs/heads/main/tv.txt",
-    #"https://raw.githubusercontent.com/niuber/iptv-api/refs/heads/master/output/ipv6/result.txt",
+    "https://raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv4.txt",
+    "https://raw.githubusercontent.com/bj123sd/hycg/refs/heads/main/tv.txt",
+    "https://raw.githubusercontent.com/niuber/iptv-api/refs/heads/master/output/ipv6/result.txt",
    #2026.10新增 output/ipv6
     
-]
+]   
 # ========== 分组映射：左边是源里的分组名，右边是输出时改后的分组名 ==========
 GROUP_MAP = {
     "央卫咪咕": "hansong咪咕-央卫",
