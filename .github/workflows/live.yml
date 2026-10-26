@@ -1,4 +1,5 @@
 name: Sync yangshi Source
+
 on:
   push:
     branches: [ main ]
@@ -7,21 +8,47 @@ on:
       - '.github/workflows/live.yml'
   workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *'
+    # 避开整点高峰，GitHub 在整点经常延迟或跳过定时任务
+    - cron: '17 */6 * * *'
+
+# 允许 GITHUB_TOKEN 推送提交（否则默认只读时 git push 会 403）
+permissions:
+  contents: write
+
+# 防止两次运行重叠导致推送冲突
+concurrency:
+  group: sync-yangshi
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 10   # 防止卡死占满 6 小时
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
       - run: pip install requests
-      - run: ls -R
-      - run: python watchtv/live.py
-      - run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add watchtv/live.m3u8
-          git commit -m "auto update live.m3u8" || echo "nothing changed"
+
+      - name: Run sync script
+        run: python watchtv/live.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 保活文件：避免仓库 60 天无提交导致定时任务被 GitHub 自动停用
+          date -u +%Y-%m-%d > watchtv/.keepalive
+
+          git add watchtv/live.m3u8 watchtv/cache watchtv/.keepalive
+          if git diff --cached --quiet; then
+            echo "nothing changed"
+            exit 0
+          fi
+          git commit -m "auto update live.m3u8"
+          git pull --rebase origin main
           git push origin main
