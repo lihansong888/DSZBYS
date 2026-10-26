@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
   schedule:
     # 避开整点高峰，GitHub 在整点经常延迟或跳过定时任务
-    - cron: '17 */6 * * *'
+    - cron: '17 */3 * * *'
 
 # 允许 GITHUB_TOKEN 推送提交（否则默认只读时 git push 会 403）
 permissions:
