@@ -8,8 +8,10 @@ on:
       - '.github/workflows/live.yml'
   workflow_dispatch:
   schedule:
-    # 避开整点高峰，GitHub 在整点经常延迟或跳过定时任务，三小时运行一次
-    - cron: '17 */1 * * *'
+    # 每 90 分钟一次（UTC）：00:17, 01:47, 03:17, 04:47 ...
+    # 避开整点高峰，GitHub 在整点经常延迟或跳过定时任务
+    - cron: '17 0,3,6,9,12,15,18,21 * * *'
+    - cron: '47 1,4,7,10,13,16,19,22 * * *'
 
 # 允许 GITHUB_TOKEN 推送提交（否则默认只读时 git push 会 403）
 permissions:
