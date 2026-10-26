@@ -1,43 +1,74 @@
-import requests
-import re
 import os
+import re
+import sys
+import time
+
+import requests
+
 # ========== 填写源的地址 ==========
 URL_LIST = [
-   "http://rihou.cc:567/gggg.nzk",
     "https://lihansong.top/iptv/src/yf.txt",
-   "https://raw.githubusercontent.com/djshxjsh233/migu/refs/heads/main/live.txt",
-    
-    "https://raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv4.txt",
-    
-   
-    
-]   
-# ========== 分组映射：左边是源里的分组名，右边是输出时改后的分组名 ==========
+    "https://raw.githubusercontent.com/djshxjsh233/migu/refs/heads/main/live.txt",
+]
+
+# ========== 分组映射：左边是源里的分组名（不区分大小写），右边是输出时改后的分组名 ==========
 GROUP_MAP = {
-    #"央卫咪咕": "hansong咪咕-央卫",
-    "音乐": "hansong-音乐直播",
-    "央卫": "hansong-央卫直播",
-    "📺央视频道": "hansong-央卫直播",
-    "📡卫视频道": "hansong-央卫直播",
-   # ========== 以下iptv/src/yf ==========
-   "咪咕央视2": "HS咪咕",
-   "咪咕央视": "HS咪咕",
-   # ========== 以下djshxjsh233/migu ==========
-    "央视频道": "HS咪咕",    
+    # ---- iptv/src/yf ----
+    "咪咕央视2": "HS咪咕",
+    "咪咕央视": "HS咪咕",
+    # ---- djshxjsh233/migu ----
+    "央视频道": "HS咪咕",
     "卫视频道": "HS咪咕",
-   "cgtn": "HS咪咕",
-   "教育频道": "HS咪咕", 
-   "本地频道": "HS咪咕", 
-   "浙江": "Z视介", 
-
-
-   
+    "cgtn": "HS咪咕",
+    "教育频道": "HS咪咕",
+    "本地频道": "HS咪咕",
+    "浙江": "Z视介",
 }
-# ========== 说明：原存活检测已停用 ==========
-# GitHub Actions 服务器在美国，访问国内直播源超时/抖动严重，
-# HEAD/GET 粗筛会把大量国内可用源误杀（且并发2+重试2次又慢又耗Action额度）。
-# 存活筛选全部交给宝塔端（国内、100并发、5~6秒阈值、一天2次），
-# 本仓库只负责：拉取上游源 -> 分组映射 -> 合并去重 -> 输出全量 live.m3u8。
+
+# 说明：不做存活检测（Actions 在美国，访问国内源不稳定），存活筛选交给宝塔端。
+# 本脚本负责：拉取上游源(重试/超时/缓存兜底) -> 分组映射 -> 合并去重 -> 输出 live.m3u8
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CACHE_DIR = os.path.join(BASE_DIR, "cache")
+OUTPUT_PATH = os.path.join(BASE_DIR, "live.m3u8")
+
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; iptv-sync/1.0)"}
+RETRIES = 3
+TIMEOUT = (10, 30)  # (连接超时, 读取超时) 秒
+
+GROUP_MAP_LOWER = {k.strip().lower(): v for k, v in GROUP_MAP.items()}
+
+
+def fetch(url: str, idx: int):
+    """拉取一个源。成功则写缓存；失败则读缓存。返回 (文本或None, 是否来自缓存)。"""
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    cache_file = os.path.join(CACHE_DIR, f"source_{idx}.txt")
+
+    last_err = None
+    for attempt in range(1, RETRIES + 1):
+        try:
+            resp = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+            resp.raise_for_status()
+            resp.encoding = resp.encoding if resp.encoding and resp.encoding.lower() != "iso-8859-1" else "utf-8"
+            text = resp.text
+            if not text.strip():
+                raise ValueError("返回内容为空")
+            with open(cache_file, "w", encoding="utf-8") as f:
+                f.write(text)
+            return text, False
+        except Exception as e:  # noqa: BLE001
+            last_err = e
+            print(f"⚠️ 第 {attempt}/{RETRIES} 次拉取失败 {url}：{e}")
+            if attempt < RETRIES:
+                time.sleep(3 * attempt)
+
+    print(f"❌ 拉取 {url} 最终失败：{last_err}")
+    if os.path.exists(cache_file):
+        print("   ↳ 使用上次缓存")
+        with open(cache_file, "r", encoding="utf-8") as f:
+            return f.read(), True
+    return None, False
+
 
 def parse_any(text: str):
     res = []
@@ -54,74 +85,74 @@ def parse_any(text: str):
             res.append((extinf_line, ln))
             extinf_line = None
             continue
-        if ',' in ln and not ln.startswith("#"):
-            sp = ln.split(',',1)
-            name_part = sp[0].strip()
-            url_part = sp[1].strip()
+        if "," in ln and not ln.startswith("#"):
+            name_part, url_part = (s.strip() for s in ln.split(",", 1))
             if url_part == "#genre#":
                 current_group = name_part
                 continue
             if current_group:
                 fake_ext = f'#EXTINF:-1 group-title="{current_group}",{name_part}'
             else:
-                fake_ext = f'#EXTINF:-1,{name_part}'
+                fake_ext = f"#EXTINF:-1,{name_part}"
             res.append((fake_ext, url_part))
     return res
 
+
 def get_channel_name(extinf):
-    if "," in extinf:
-        return extinf.split(",")[-1].strip()
-    return ""
+    return extinf.split(",")[-1].strip() if "," in extinf else ""
+
 
 def get_group_title(extinf):
     m = re.search(r'group-title="([^"]+)"', extinf)
-    if m:
-        return m.group(1).strip()
-    return ""
+    return m.group(1).strip() if m else ""
+
 
 def main():
-    # 用改后的分组名初始化空列表
     group_bucket = {v: [] for v in GROUP_MAP.values()}
     seen = set()
-    for url in URL_LIST:
-        try:
-            resp = requests.get(url, timeout=15)
-            resp.raise_for_status()
-            channels = parse_any(resp.text)
-            for extinf, play_url in channels:
-                ch_name = get_channel_name(extinf)
-                ch_group = get_group_title(extinf)
-                # 只保留 GROUP_MAP 里有的分组，其他全屏蔽
-                if ch_group not in GROUP_MAP:
-                    continue
-                # 关键：查映射表，把源分组名改成输出分组名
-                output_group = GROUP_MAP[ch_group]
-                item_key = (ch_name, play_url)
-                if item_key not in seen:
-                    seen.add(item_key)
-                    group_bucket[output_group].append((ch_name, play_url))
-        except Exception as e:
-            print(f"⚠️ 拉取 {url} 失败：{e}")
+    ok_sources = 0
 
-    # ========== 存活检测已停用：全部源直接输出，筛选交给宝塔端 ==========
+    for idx, url in enumerate(URL_LIST):
+        text, from_cache = fetch(url, idx)
+        if text is None:
+            continue
+        ok_sources += 1
+        try:
+            channels = parse_any(text)
+        except Exception as e:  # noqa: BLE001
+            print(f"⚠️ 解析 {url} 失败：{e}")
+            continue
+        for extinf, play_url in channels:
+            ch_group = get_group_title(extinf).lower()
+            if ch_group not in GROUP_MAP_LOWER:
+                continue
+            output_group = GROUP_MAP_LOWER[ch_group]
+            ch_name = get_channel_name(extinf)
+            key = (ch_name, play_url)
+            if key not in seen:
+                seen.add(key)
+                group_bucket[output_group].append((ch_name, play_url))
+
     total_cnt = sum(len(v) for v in group_bucket.values())
-    print(f"✅采集完成，共提取 {total_cnt} 个频道（跳过粗筛检测，全量输出）")
+    print(f"✅ 采集完成：成功 {ok_sources}/{len(URL_LIST)} 个源，共 {total_cnt} 个频道")
     for gname, ch_list in group_bucket.items():
         print(f"  - {gname}: {len(ch_list)} 个频道")
 
-    # 输出m3u8文件
-    out_dir = os.path.dirname(os.path.abspath(__file__))
-    output_m3u = ["#EXTM3U"]
+    # 保护：没有任何频道就不覆盖旧文件，并让任务显示失败以便发现问题
+    if total_cnt == 0:
+        print("❌ 没有提取到任何频道，保留原有 live.m3u8，不覆盖")
+        sys.exit(1)
+
+    lines = ["#EXTM3U"]
     for gname, ch_list in group_bucket.items():
         for cname, curl in ch_list:
-            # 输出时用改后的分组名
-            fake_ext = f'#EXTINF:-1 group-title="{gname}",{cname}'
-            output_m3u.append(fake_ext)
-            output_m3u.append(curl)
-    m3u8_path = os.path.join(out_dir, "live.m3u8")
-    with open(m3u8_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(output_m3u))
-    print(f"✅已输出 m3u8：{m3u8_path}")
+            lines.append(f'#EXTINF:-1 group-title="{gname}",{cname}')
+            lines.append(curl)
+
+    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+    print(f"✅ 已输出 m3u8：{OUTPUT_PATH}")
+
 
 if __name__ == "__main__":
     main()
