@@ -7,15 +7,15 @@ import requests
 
 # ========== 填写源的地址 ==========
 URL_LIST = [
-    "https://lihansong.top/iptv/src/yf.txt",
+    #"https://lihansong.top/iptv/src/yf.txt",
     "https://raw.githubusercontent.com/djshxjsh233/migu/refs/heads/main/live.txt",
 ]
 
 # ========== 分组映射：左边是源里的分组名（不区分大小写），右边是输出时改后的分组名 ==========
 GROUP_MAP = {
     # ---- iptv/src/yf ----
-    "咪咕央视2": "HS咪咕",
-    "咪咕央视": "HS咪咕",
+    #"咪咕央视2": "HS咪咕",
+    #"咪咕央视": "HS咪咕",
     # ---- djshxjsh233/migu ----
     "央视频道": "HS咪咕",
     "卫视频道": "HS咪咕",
