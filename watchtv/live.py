@@ -8,7 +8,6 @@ import requests
 # ========== 填写源的地址 ==========
 URL_LIST = [
     #"https://lihansong.top/iptv/src/yf.txt",
-    "https://raw.githubusercontent.com/bang359/dsj/refs/heads/main/dsjcs.txt",
     
     "https://raw.githubusercontent.com/djshxjsh233/migu/refs/heads/main/live.txt",
 ]
@@ -18,8 +17,7 @@ GROUP_MAP = {
     # ---- iptv/src/yf ----
     #"咪咕央视2": "HS咪咕",
     #"咪咕央视": "HS咪咕",
-    # ---- bang359/dsj ----
-    "📺咪咕视频": "咪咕视频",
+    
     # ---- djshxjsh233/migu ----
     "央视频道": "HS咪咕",
     "卫视频道": "HS咪咕",
